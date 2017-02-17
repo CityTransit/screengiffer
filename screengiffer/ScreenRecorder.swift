@@ -6,7 +6,7 @@
 //  Copyright © 2017 CityTransit. All rights reserved.
 //
 
-import Foundation
+import Cocoa
 import AVFoundation
 import CoreGraphics
 
@@ -14,6 +14,13 @@ class ScreenRecorder: NSObject {
     
     var captureSession: AVCaptureSession?
     var output: AVCaptureMovieFileOutput?
+    var statusItem: NSStatusItem?
+    
+    static let shared = ScreenRecorder()
+    
+    private override init() {
+        super.init()
+    }
     
     func menuIconClicked(_ sender: Any) {
         if (captureSession == nil) || !(captureSession!.isRunning) {
@@ -27,32 +34,48 @@ class ScreenRecorder: NSObject {
         return captureSession != nil && captureSession!.isRunning
     }
     
-    func startRecording() {
+    func startRecording(rect: CGRect? = nil) {
         captureSession = AVCaptureSession()
         captureSession?.sessionPreset = AVCaptureSessionPresetHigh
         
+        // TODO: OTHER MONITORS
         //Display = CGGetDisplaysWithPoint... etc
         let input = AVCaptureScreenInput(displayID: CGMainDisplayID())
+        
+        if let rect = rect {
+            input?.cropRect = rect
+        }
+        
+        input?.capturesMouseClicks = true
+        input?.capturesCursor = false
+        
         captureSession?.addInput(input)
         
         output = AVCaptureMovieFileOutput()
         captureSession?.addOutput(output)
         
         captureSession?.startRunning()
-        
-        let outputPath = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(filename())
-        output?.startRecording(toOutputFileURL: outputPath, recordingDelegate: self)
+        output?.startRecording(toOutputFileURL: path(), recordingDelegate: self)
+
+        let alternateImage = NSImage(named: "BarIconStop")
+        alternateImage?.isTemplate = true
+        statusItem?.recordingIcon()
     }
     
     func stopRecording() {
-        captureSession?.stopRunning()
+        output?.stopRecording()
+        statusItem?.defaultIcon()
+    }
+    
+    func path() -> URL {
+        return URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("Desktop/" + filename())
     }
     
     func filename() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .medium
-        return "Desktop/screengiffer-\(dateFormatter.string(from: Date())).mov"
+        return "screengiffer-\(dateFormatter.string(from: Date())).mov"
     }
 }
 

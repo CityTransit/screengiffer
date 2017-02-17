@@ -12,19 +12,20 @@ import CoreGraphics
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-    @IBOutlet weak var window: NSWindow!
+    
     let statusItem: NSStatusItem = {
+        
         let statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
-        let image = NSImage(named: "BarIcon")
-        image?.isTemplate = true // Adjusts image for dark mode
-        statusItem.image = image
+        
+        statusItem.defaultIcon()
+        
         return statusItem;
     }()
     
-    let screenRecorder: ScreenRecorder = ScreenRecorder()
+    let overlayController = OverlayWindowController()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        ScreenRecorder.shared.statusItem = statusItem
         statusItem.action = #selector(menuIconClicked(_:))
     }
 
@@ -33,10 +34,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func menuIconClicked(_ sender: Any) {
-        if screenRecorder.isRecording() {
-            screenRecorder.startRecording()
+        
+        if !ScreenRecorder.shared.isRecording() {
+            
+            if let button = sender as? NSStatusBarButton {
+                if let screen = button.window?.screen {
+                    self.overlayController.show(on: screen)
+                }
+            }
         } else {
-            screenRecorder.stopRecording()
+            ScreenRecorder.shared.stopRecording()
         }
     }
 
