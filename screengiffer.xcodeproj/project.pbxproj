@@ -16,6 +16,7 @@
 		84D40DA81E57624A002421F2 /* SelectionMaskContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D40DA71E57624A002421F2 /* SelectionMaskContainerView.swift */; };
 		84D40DAA1E579976002421F2 /* NSStatusItem+ScreenRecorderIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D40DA91E579976002421F2 /* NSStatusItem+ScreenRecorderIcons.swift */; };
 		84D40DAC1E57A3ED002421F2 /* Giffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D40DAB1E57A3ED002421F2 /* Giffer.swift */; };
+		84E804DB1E5DFAB400F7C827 /* FIFO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E804DA1E5DFAB400F7C827 /* FIFO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		84D40DA71E57624A002421F2 /* SelectionMaskContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionMaskContainerView.swift; sourceTree = "<group>"; };
 		84D40DA91E579976002421F2 /* NSStatusItem+ScreenRecorderIcons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStatusItem+ScreenRecorderIcons.swift"; sourceTree = "<group>"; };
 		84D40DAB1E57A3ED002421F2 /* Giffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Giffer.swift; sourceTree = "<group>"; };
+		84E804DA1E5DFAB400F7C827 /* FIFO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FIFO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 				84D40D9B1E573609002421F2 /* Info.plist */,
 				84D40DA91E579976002421F2 /* NSStatusItem+ScreenRecorderIcons.swift */,
 				84D40DAB1E57A3ED002421F2 /* Giffer.swift */,
+				84E804DA1E5DFAB400F7C827 /* FIFO.swift */,
 			);
 			path = screengiffer;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84D40DAA1E579976002421F2 /* NSStatusItem+ScreenRecorderIcons.swift in Sources */,
+				84E804DB1E5DFAB400F7C827 /* FIFO.swift in Sources */,
 				84D40D951E573609002421F2 /* AppDelegate.swift in Sources */,
 				84D40DA81E57624A002421F2 /* SelectionMaskContainerView.swift in Sources */,
 				84D40DA61E575E94002421F2 /* OverlayWindowPanel.swift in Sources */,
@@ -309,6 +313,7 @@
 				84D40DA01E573609002421F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

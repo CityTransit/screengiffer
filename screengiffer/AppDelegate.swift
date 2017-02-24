@@ -39,6 +39,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             if let button = sender as? NSStatusBarButton {
                 if let screen = button.window?.screen {
+                    
+                    ScreenRecorder.shared.screen = screen
+                    
                     self.overlayController.show(on: screen)
                 }
             }

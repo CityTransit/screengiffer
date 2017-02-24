@@ -30,6 +30,10 @@ class ScreenRecorder: NSObject {
     
     var frames: [ScreenRecorderFrame]? = []
     
+    var screen: NSScreen?
+    
+    var gifBuffer: GifBuffer?
+    
     static let shared = ScreenRecorder()
     
     private override init() {
@@ -52,9 +56,8 @@ class ScreenRecorder: NSObject {
         captureSession = AVCaptureSession()
         captureSession?.sessionPreset = AVCaptureSessionPresetHigh
         
-        // TODO: OTHER MONITORS
-        //Display = CGGetDisplaysWithPoint... etc
-        let input = AVCaptureScreenInput(displayID: CGMainDisplayID())
+        guard let displayID = screen?.deviceDescription["NSScreenNumber"] as? NSNumber else { return }
+        let input = AVCaptureScreenInput(displayID: CGDirectDisplayID(displayID.uint32Value))
         
         if let rect = rect {
             input?.cropRect = rect
@@ -69,6 +72,8 @@ class ScreenRecorder: NSObject {
         output?.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : Int(kCVPixelFormatType_32BGRA)]
         captureSession?.addOutput(output)
         
+        gifBuffer = GifBuffer(path())
+        
         captureSession?.startRunning()
         output?.setSampleBufferDelegate(self, queue: DispatchQueue(label: "com.citytransit.screenrecorder"))
 
@@ -78,12 +83,16 @@ class ScreenRecorder: NSObject {
     func stopRecording() {
         
         captureSession?.stopRunning()
-        
-        if let _ = frames {
-            Giffer.createGif(path(), frames: frames!) { success in
-                self.frames = []
-            }
+
+        gifBuffer?.end() { success in
+            print(success)
         }
+        
+//        if let _ = frames {
+//            Giffer.createGif(path(), frames: frames!) { success in
+//                self.frames = []
+//            }
+//        }
         
         statusItem?.defaultIcon()
     }
@@ -133,10 +142,13 @@ extension ScreenRecorder: AVCaptureVideoDataOutputSampleBufferDelegate{
             if let quartzImage = context.makeImage() {
                 // Create an image object from the Quartz image
                 let image = NSImage(cgImage: quartzImage, size: NSSize(width: width, height: height))
-                if frames == nil {
-                    frames = []
-                }
-                frames?.append(ScreenRecorderFrame(image: image, duration: durationSeconds))
+                
+                gifBuffer?.addFrame(ScreenRecorderFrame(image: image, duration: durationSeconds))
+                
+//                if frames == nil {
+//                    frames = []
+//                }
+//                frames?.append(ScreenRecorderFrame(image: image, duration: durationSeconds))
             }
         } else {
             CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0));
